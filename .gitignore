@@ -1,0 +1,7 @@
+
+// Ignore Object code files
+*.o
+*.out
+
+// Ignoring output files
+output.txt
