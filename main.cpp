@@ -1,3 +1,22 @@
-int main(){
-	std::cout << "This is main file";
-}
+#include <bits/stdc++.h>
+#include <iostream>
+#include "cryptanalysis.h"
+#include "util.h"
+using namespace std;
+
+int main()
+{
+	cout << endl;
+	freopen("output.txt", "w", stdout);
+
+	string cipher = "ahbeutdfrgqxlnpivxvodmbbghjeimlbftmtjnprbawwpyunfcukbawnpivasmtqdxjumekagimemtubxubasxfpqvsnfpokgoqanmwudtmkkqiaonaxfmvwkoqbwklniqqkknvpmglmutmlloeqvmkwpymyjinhikaivextjntanmzyuaegkinqbtccosbawvveeaaffabawltiiecnpekagimqdxjsemgmzyuaegkfjnztjsjeivzysuaawxqxivwwfzbksfmkthuuuqltfxgutewxxubatipwahfuxulxjuosmhxnpbqvkcueiigjvxikkjpfnhjmuglxfntmvwjytulxfntmtbcyprnxjcosiiwudqnndyohqkghnqvmxisdmtvcosigvffmzgahhfpxdccdikqwpzbbfobxtrmjembxkcuekhdffobbghfzanjcosbasnutmkwmbxetqmtauxlbjzogwqgazmzydgzbgotyqgvgbzglloeqvmkpjeqmlbfxqujuskzxyommzeqvpdzhocosjhgetfwawfqiqmzniqqkknvpqxkisfwlagqxgxfdpkizgieebhjsutqljivfqgwbbejxuinqioanbxxtjnprbawwpyunfcukakzsutuygmuqzbfabxwowzpdzxsxjzoteiosbawspgvzsheatwsfjwmmzytophgftmvwlbfxqujuskehjeimvwahimvwliogzmmlffpxecopahxniqbhohtkwnlbddmtlcosilllpzoygoopimaiorwklbfuzymnvdmpzcmqmgjcdtqgyniqtbnytantdfxtweapffpxjy";
+
+	Util util;
+	string cipherText = util.cleanCipherText(cipher);
+
+	CryptAnalysis c(cipherText);
+	unordered_set<int> val = c.kasaskiMethod();
+	c.indexOfCoincidence(val, 2, 10);
+
+	return 0;
+};
