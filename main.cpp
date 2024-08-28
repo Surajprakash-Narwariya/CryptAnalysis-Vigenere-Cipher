@@ -23,5 +23,15 @@ int main()
 	cout << endl;
 
 	c.mutualIndexOfCoincidence(keySize);
+
+	vector<vector<double>> matrix = {
+		{1, -1, 0, 0, 14}, // Equation 1: 2x - y + 3z = 9
+		{1, 0, -1, 0, 25}, // Equation 2: 3x + 2y - 4z = -6
+		{1, 0, 0, -1, 24},
+		{0, 1, -1, 0, 11} // Equation 3: x + y + z = 7
+	};
+
+	util.gaussianElimination(matrix);
+
 	return 0;
 };

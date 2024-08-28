@@ -20,7 +20,45 @@ public:
     vector<string> generateSubstring(string cipherText, int keySize);
     pair<int, double> calculateMIC2strings(string &A, string &B);
     vector<int> frequencyOf26Chars(string &str);
+    void gaussianElimination(vector<vector<double>> &matrix);
 };
+
+void Util::gaussianElimination(vector<vector<double>> &matrix)
+{
+    int n = matrix.size();
+
+    // Forward Elimination
+    for (int i = 0; i < n; i++)
+    {
+        // Make the diagonal element 1 and eliminate below
+        for (int k = i + 1; k < n; k++)
+        {
+            double factor = matrix[k][i] / matrix[i][i];
+            for (int j = 0; j <= n; j++)
+            {
+                matrix[k][j] -= factor * matrix[i][j];
+            }
+        }
+    }
+
+    // Back Substitution
+    std::vector<double> solution(n);
+    for (int i = n - 1; i >= 0; i--)
+    {
+        solution[i] = matrix[i][n] / matrix[i][i];
+        for (int k = i - 1; k >= 0; k--)
+        {
+            matrix[k][n] -= matrix[k][i] * solution[i];
+        }
+    }
+
+    // Output the solution
+    std::cout << "Solution:\n";
+    for (int i = 0; i < n; i++)
+    {
+        std::cout << "Variable " << i + 1 << " = " << solution[i] << std::endl;
+    }
+}
 
 pair<int, double> Util::calculateMIC2strings(string &A, string &B)
 {
