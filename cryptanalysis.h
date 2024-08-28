@@ -7,10 +7,11 @@ class CryptAnalysis
 {
 public:
     string cipherText = "";
-
-    CryptAnalysis(string ct)
+    string originalCipherText = "";
+    CryptAnalysis(string ct, string ct1)
     {
         cipherText = ct;
+        originalCipherText = ct1;
     };
     // unordered_set<int> possibleKeySizeByKasaski;
 
@@ -32,12 +33,13 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
     vector<string> substrings = util.generateSubstring(cipherText, keySize);
     cout << endl;
     vector<vector<int>> equations;
-    int key[keySize];key[0]=0;
+    int key[keySize];
+    key[0] = 0;
     for (int i = 1; i < keySize; i++)
     {
-        key[i]=-1;
+        key[i] = -1;
     }
-    
+
     for (int i = 0; i < substrings.size(); i++)
     {
         for (int j = i + 1; j < substrings.size(); j++)
@@ -45,93 +47,109 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
             pair<int, double> micValue = util.calculateMIC2strings(substrings[i], substrings[j]);
             cout << micValue.first << " " << micValue.second << "\n";
             cout << "K" << i << " - K" << j << " = " << micValue.first << endl;
-            vector<int> equation = {i,j,micValue.first};
+            vector<int> equation = {i, j, micValue.first};
             equations.push_back(equation);
             cout << endl;
         }
     }
-    for (int i = 0; i < equations.size(); i++){
-        cout << equations[i][0] << " " << equations[i][1] << " " << equations[i][2] << " ";
-    }
-    int count=1;
     for (int i = 0; i < equations.size(); i++)
     {
-        if(equations[i][0] == 0){
+        cout << equations[i][0] << " " << equations[i][1] << " " << equations[i][2] << " ";
+    }
+    int count = 1;
+    for (int i = 0; i < equations.size(); i++)
+    {
+        if (equations[i][0] == 0)
+        {
             // cout << equations[i][0] << equations[i][1] << equations[i][2] << endl;
             key[equations[i][1]] = equations[i][2];
             count++;
         }
     }
-    for (int i = 0; i < equations.size() && count<=keySize; i++){
-        if((key[equations[i][0]] != 0) && (key[equations[i][0]] != -1) && (key[equations[i][1]] == -1)){
+    for (int i = 0; i < equations.size() && count <= keySize; i++)
+    {
+        if ((key[equations[i][0]] != 0) && (key[equations[i][0]] != -1) && (key[equations[i][1]] == -1))
+        {
             count++;
             key[equations[i][1]] == key[equations[i][0]] + equations[i][2];
         }
-        else if((key[equations[i][1]] != 0) && (key[equations[i][0]] == -1) && (key[equations[i][1]] != -1)){
+        else if ((key[equations[i][1]] != 0) && (key[equations[i][0]] == -1) && (key[equations[i][1]] != -1))
+        {
             count++;
             key[equations[i][0]] == abs(key[equations[i][1]] - equations[i][2]);
         }
-        else{
+        else
+        {
             continue;
         }
     }
-    cout << endl << key[0] <<" ";
-    for (int i = 1; i < keySize; i++){
-        key[i]=26-key[i];
+    cout << endl
+         << key[0] << " ";
+    for (int i = 1; i < keySize; i++)
+    {
+        key[i] = 26 - key[i];
         cout << key[i] << " ";
     }
     string finalKey;
     vector<string> keysList;
-    for (int i = 0; i < 26; i++){
-        int testKey[keySize];finalKey="";
-        for(int j=0;j<keySize;j++){
-            testKey[j] = (key[j]+i)%26;
+    for (int i = 0; i < 26; i++)
+    {
+        int testKey[keySize];
+        finalKey = "";
+        for (int j = 0; j < keySize; j++)
+        {
+            testKey[j] = (key[j] + i) % 26;
         }
-        for(int j=0;j<keySize;j++){
-            finalKey += static_cast<char>(testKey[j]+65);
+        for (int j = 0; j < keySize; j++)
+        {
+            finalKey += char(testKey[j] + 65);
         }
         // double finalKeyIC = util.getICValue(cipherText,5);
         // cout << finalKey << " "<<finalKeyIC << endl;
         keysList.push_back(finalKey);
     }
-    
+
     // cout << equations[4][1] << endl;
     cout << endl;
     // For the ith string, we find the MIC with other susbtring
-    cout<<cipherText<<endl;
-    for(int i=0;i<26;i++){
+    cout << cipherText << endl;
+    for (int i = 0; i < 26; i++)
+    {
         string testKey = keysList[i];
-        cout << testKey<< " " ;
-        string plainText="";
-        for (int j = 0; j < cipherText.size();){
-            for (int k = 0; k < 4; k++,j++){
-                char plain = ((cipherText[j] - 'A') -(testKey[k]-'A')+26)%26 + 'A';
+        cout << testKey << " ";
+        string plainText = "";
+        for (int j = 0; j < cipherText.size();)
+        {
+            for (int k = 0; k < keySize; k++, j++)
+            {
+                char plain = ((cipherText[j] - 'A') - (testKey[k] - 'A') + 26) % 26 + 'A';
                 plainText += plain;
             }
         }
+        cout << endl;
         // vector<int> frequencyOfChars = util.frequencyOf26Chars(plainText);
         // double icValue; int n= cipherText.size();
         // for(int i=0;i<26;i++){
         //     icValue += (frequencyOfChars[i])*(frequencyOfChars[i]-1);
         // }
         // icValue = icValue/(n*(n-1));
-        cout <<" "<< plainText<< " "<<endl;
-        cout<<endl;
+        cout << " " << util.addSpecialCharacters(originalCipherText, plainText) << " " << endl;
+        cout << endl;
     }
 
     return keysList;
 }
 
 // string CryptAnalysis::findFinalKeyword(unordered_set<string> keysList){
-    // string plainText;
-    // for(int i=0;i<26;i++){
-    //     for (int j = 0; j < cipherText.size(); j++){
-    //         for (int k = 0; k < 5; k++){
-    //             plainText[j] = cipherText[j] 
-    //         }
-    //     }
-    // }
-    // return " ";
+// string plainText;
+// for(int i=0;i<26;i++){
+//     for (int j = 0; j < cipherText.size(); j++){
+//         for (int k = 0; k < 5; k++){
+//             plainText[j] = cipherText[j]
+//         }
+//     }
+// }
+// return " ";
 // }
 
 int CryptAnalysis::indexOfCoincidence(unordered_set<int> &possibleKeySizeByKasaski, int leftRange, int rightRange)
@@ -161,10 +179,10 @@ unordered_set<int> CryptAnalysis::kasaskiMethod()
 {
     Util util;
     // Remove the characters and space between letters and make it uppercase
-    string cipher = util.cleanCipherText(cipherText);
+    // string cipher = util.cleanCipherText(cipherText);
     int patternSize = 3;
     // Return the substring with its repetition index in the cipher text
-    unordered_map<string, vector<int>> x = util.getAllSubstringFrequency(cipher, patternSize);
+    unordered_map<string, vector<int>> x = util.getAllSubstringFrequency(cipherText, patternSize);
 
     // Printing the substring
     // for (auto &m : x)

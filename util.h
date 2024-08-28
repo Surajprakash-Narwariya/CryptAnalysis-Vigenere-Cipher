@@ -20,7 +20,37 @@ public:
     vector<string> generateSubstring(string cipherText, int keySize);
     pair<int, double> calculateMIC2strings(string &A, string &B);
     vector<int> frequencyOf26Chars(string &str);
+    string addSpecialCharacters(string &cipher, string &decryptedText);
 };
+
+string Util::addSpecialCharacters(string &cipher, string &decryptedText)
+{
+    int size = cipher.size();
+    string result = "";
+    int decryptedTextIterator = 0;
+    for (int i = 0; i < size; i++)
+    {
+        int intVal = (int)cipher[i];
+        if (intVal >= 65 && intVal <= 90)
+        {
+            // Capital letters
+            result += toupper(decryptedText[decryptedTextIterator]);
+            decryptedTextIterator++;
+        }
+        else if (intVal >= 97 && intVal <= 122)
+        {
+            // Small English letters
+            result += tolower(decryptedText[decryptedTextIterator]);
+            decryptedTextIterator++;
+        }
+        else
+        {
+            // Special Characters;
+            result += cipher[i];
+        }
+    }
+    return result;
+}
 
 pair<int, double> Util::calculateMIC2strings(string &A, string &B)
 {
@@ -250,6 +280,10 @@ string Util::cleanCipherText(const string &cipherText)
     for (char c : text)
         if ((int)c >= 65 && (int)c <= 90)
             cipher += c;
+
+    cout << "-----------------------------" << endl;
+    cout << cipher << endl;
+    cout << "------------------------------" << endl;
 
     return cipher;
 }
