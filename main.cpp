@@ -9,7 +9,7 @@ int main()
 	cout << endl;
 	freopen("output.txt", "w", stdout);
 
-	string cipher = "kbduwwhxxwopcuhfahkitwyithkitszeuoflcfpmpuomvhoidcrouhrvghkevadradhsrzhpqjhhGjhvardcvvhsybhvifhivsggwgwsosuwywwlckdvogpmnsdrfoivksqhnmzstrWlggkinjhwysuihwopgrzmvvvxqfliutusoouswbgxjszstzgmpjlxkbjvgogitgwsglspqfhrgkdhxsqxwfhwcbgmfsdw";
+	string cipher = "Ar c zmwvjari aaxa jazgb s qcl feocv Pgm olq usw cjoeaq ar c fmvtw. Zmu jajg usw c uzmtjompb gj ocwxklyw, fcshngfiu, yfh glvpgqk xq-bg pkqlw. Hpgq fyor wllmn bmwm, fw qqtwh vfjswez xjc vea jaog y eeefarg, psvgjq tcskmpe ls eylgj faw dpwevf. Wzgpq qqpfmpe, zi ymmpf pmwj mmx qd zmu yhetreipr, tvkcxgcqw mp fsrf, yfh fgni klls vfw gjygw qd llg aaxa. Mfi fyq, eu Jws yyk lwpjckly xq ugvm, fw rqraggb sr qjv aqksr uglxkly sp y tipaz fa rzi ryjo, hcwhkly xjc tmtbk. Wjc oeu rzitc wzgpq qqpfmpe, spyyqw ygll c nweecxyn qemnc gr jcj jcaw. Fwr gr vfaw ryjxkampcp vea, qgqgrzmpe sfqsl lgp uewezx Ncg’w crliprasp. ";
 
 	Util util;
 	string cipherText = util.cleanCipherText(cipher);
@@ -22,6 +22,9 @@ int main()
 	cout << "FINALISED KEY SIZE IS --    " << keySize << endl;
 	cout << endl;
 
-	c.mutualIndexOfCoincidence(keySize);
+	vector<string> keysList = c.mutualIndexOfCoincidence(keySize);
+	for(const string& i:keysList){
+		cout << i << " ";
+	}
 	return 0;
 };
