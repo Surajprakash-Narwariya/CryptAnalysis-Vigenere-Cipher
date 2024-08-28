@@ -45,23 +45,16 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
         for (int j = i + 1; j < substrings.size(); j++)
         {
             pair<int, double> micValue = util.calculateMIC2strings(substrings[i], substrings[j]);
-            cout << micValue.first << " " << micValue.second << "\n";
-            cout << "K" << i << " - K" << j << " = " << micValue.first << endl;
             vector<int> equation = {i, j, micValue.first};
             equations.push_back(equation);
-            cout << endl;
         }
     }
-    for (int i = 0; i < equations.size(); i++)
-    {
-        cout << equations[i][0] << " " << equations[i][1] << " " << equations[i][2] << " ";
-    }
+
     int count = 1;
     for (int i = 0; i < equations.size(); i++)
     {
         if (equations[i][0] == 0)
         {
-            // cout << equations[i][0] << equations[i][1] << equations[i][2] << endl;
             key[equations[i][1]] = equations[i][2];
             count++;
         }
@@ -83,12 +76,9 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
             continue;
         }
     }
-    cout << endl
-         << key[0] << " ";
     for (int i = 1; i < keySize; i++)
     {
         key[i] = 26 - key[i];
-        cout << key[i] << " ";
     }
     string finalKey;
     vector<string> keysList;
@@ -109,10 +99,10 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
         keysList.push_back(finalKey);
     }
 
-    // cout << equations[4][1] << endl;
-    cout << endl;
     // For the ith string, we find the MIC with other susbtring
-    cout << cipherText << endl;
+    cout << "-----------------------------------------------" << "\n";
+    cout << "Possible KEY with Its Decrypted Text: " << "\n"
+         << "\n";
     for (int i = 0; i < 26; i++)
     {
         string testKey = keysList[i];
@@ -140,38 +130,41 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
     return keysList;
 }
 
-// string CryptAnalysis::findFinalKeyword(unordered_set<string> keysList){
-// string plainText;
-// for(int i=0;i<26;i++){
-//     for (int j = 0; j < cipherText.size(); j++){
-//         for (int k = 0; k < 5; k++){
-//             plainText[j] = cipherText[j]
-//         }
-//     }
-// }
-// return " ";
-// }
-
 int CryptAnalysis::indexOfCoincidence(unordered_set<int> &possibleKeySizeByKasaski, int leftRange, int rightRange)
 {
     Util util;
     vector<int> filteredKeys = util.filterSize(possibleKeySizeByKasaski, leftRange, rightRange);
 
-    vector<double> ICValues(11);
+    cout << "-----------------------------------------------" << "\n";
+    cout << "Possible Key Length from " << leftRange << " to " << rightRange << " is :"
+         << "\n";
+    for (int i : filteredKeys)
+        cout << i << " ";
+    cout << "\n " << "\n"
+         << "\n";
+
+    vector<double> ICValues(rightRange + 1);
     for (int i = 0; i < filteredKeys.size(); i++)
     {
         ICValues[filteredKeys[i]] = util.getICValue(cipherText, filteredKeys[i]);
     }
 
-    cout << endl;
     int maxIndex = 0;
-    for (int i = 0; i < 11; i++)
+    for (int i = 0; i <= rightRange; i++)
     {
-        cout << "For key of size" << i << "  IC VALUE IS " << ICValues[i] << endl;
+        if (ICValues[i] != 0)
+            cout << "For key of size" << i << "  IC VALUE IS " << ICValues[i] << endl;
         if (ICValues[i] > ICValues[maxIndex])
             maxIndex = i;
     }
+    cout << "\n";
 
+    cout << "-----------------------------------------------" << "\n";
+
+    cout << "\n";
+    cout << "Finalised Key as per Index of Coincidence Method is --  " << maxIndex << endl;
+    cout << "\n"
+         << "\n";
     return maxIndex;
 }
 
@@ -184,18 +177,18 @@ unordered_set<int> CryptAnalysis::kasaskiMethod()
     // Return the substring with its repetition index in the cipher text
     unordered_map<string, vector<int>> x = util.getAllSubstringFrequency(cipherText, patternSize);
 
-    // Printing the substring
-    // for (auto &m : x)
-    // {
-    //     cout << m.first << " -- ";
-    //     for (int i : m.second)
-    //         cout << i << " ";
-    //     cout << endl;
-    // }
-
     unordered_set<int> plength = util.possibleKeyLength(x);
 
-    cout << endl;
+    cout << "\n";
+    cout << "-----------------------------------------------" << "\n";
+    cout << "Possible Key Size as per Kasiski Method: " << "\n"
+         << "\n";
+    for (int i : plength)
+        cout << i << " ";
+
+    cout << "\n"
+         << "\n"
+         << "\n";
 
     return plength;
 }

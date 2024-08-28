@@ -157,12 +157,7 @@ vector<int> Util::filterSize(unordered_set<int> &lengths, int leftRange, int rig
         }
     }
 
-    cout << "POSSIBLE KEY LENGTH SIZE FROM " << leftRange << " to " << rightRange << " is" << " ";
-    for (int i : filteredkeyLength)
-        cout << i << " ";
-    cout << endl;
-
-    return filteredkeyLength;
+        return filteredkeyLength;
 }
 
 int Util::gcd(int first, int second)
@@ -202,7 +197,6 @@ unordered_set<int> Util::possibleKeyLength(unordered_map<string, vector<int>> &a
         if (val != 1)
             gcdValues.push_back(val);
     }
-    cout << endl;
 
     // Now checking each gcd value to other gcd value such that result is not 1
     unordered_set<int> possibleLength;
@@ -280,10 +274,6 @@ string Util::cleanCipherText(const string &cipherText)
     for (char c : text)
         if ((int)c >= 65 && (int)c <= 90)
             cipher += c;
-
-    cout << "-----------------------------" << endl;
-    cout << cipher << endl;
-    cout << "------------------------------" << endl;
 
     return cipher;
 }
