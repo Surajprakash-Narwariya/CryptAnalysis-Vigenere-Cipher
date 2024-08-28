@@ -9,14 +9,19 @@ int main()
 	cout << endl;
 	freopen("output.txt", "w", stdout);
 
-	string cipher = "ahbeutdfrgqxlnpivxvodmbbghjeimlbftmtjnprbawwpyunfcukbawnpivasmtqdxjumekagimemtubxubasxfpqvsnfpokgoqanmwudtmkkqiaonaxfmvwkoqbwklniqqkknvpmglmutmlloeqvmkwpymyjinhikaivextjntanmzyuaegkinqbtccosbawvveeaaffabawltiiecnpekagimqdxjsemgmzyuaegkfjnztjsjeivzysuaawxqxivwwfzbksfmkthuuuqltfxgutewxxubatipwahfuxulxjuosmhxnpbqvkcueiigjvxikkjpfnhjmuglxfntmvwjytulxfntmtbcyprnxjcosiiwudqnndyohqkghnqvmxisdmtvcosigvffmzgahhfpxdccdikqwpzbbfobxtrmjembxkcuekhdffobbghfzanjcosbasnutmkwmbxetqmtauxlbjzogwqgazmzydgzbgotyqgvgbzglloeqvmkpjeqmlbfxqujuskzxyommzeqvpdzhocosjhgetfwawfqiqmzniqqkknvpqxkisfwlagqxgxfdpkizgieebhjsutqljivfqgwbbejxuinqioanbxxtjnprbawwpyunfcukakzsutuygmuqzbfabxwowzpdzxsxjzoteiosbawspgvzsheatwsfjwmmzytophgftmvwlbfxqujuskehjeimvwahimvwliogzmmlffpxecopahxniqbhohtkwnlbddmtlcosilllpzoygoopimaiorwklbfuzymnvdmpzcmqmgjcdtqgyniqtbnytantdfxtweapffpxjy";
+	string cipher = "kbduwwhxxwopcuhfahkitwyithkitszeuoflcfpmpuomvhoidcrouhrvghkevadradhsrzhpqjhhGjhvardcvvhsybhvifhivsggwgwsosuwywwlckdvogpmnsdrfoivksqhnmzstrWlggkinjhwysuihwopgrzmvvvxqfliutusoouswbgxjszstzgmpjlxkbjvgogitgwsglspqfhrgkdhxsqxwfhwcbgmfsdw";
 
 	Util util;
 	string cipherText = util.cleanCipherText(cipher);
 
 	CryptAnalysis c(cipherText);
 	unordered_set<int> val = c.kasaskiMethod();
-	c.indexOfCoincidence(val, 2, 10);
+	int keySize = c.indexOfCoincidence(val, 2, 10);
 
+	cout << endl;
+	cout << "FINALISED KEY SIZE IS --    " << keySize << endl;
+	cout << endl;
+
+	c.mutualIndexOfCoincidence(keySize);
 	return 0;
 };

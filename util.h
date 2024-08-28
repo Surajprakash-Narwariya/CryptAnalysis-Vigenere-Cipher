@@ -17,17 +17,62 @@ public:
     vector<int> filterSize(unordered_set<int> &lengths, int leftRange, int rightRange);
     double getICValue(string cipherText, int keySize);
     double calculateICValue(string &str);
+    vector<string> generateSubstring(string cipherText, int keySize);
+    pair<int, double> calculateMIC2strings(string &A, string &B);
+    vector<int> frequencyOf26Chars(string &str);
 };
 
-double Util::calculateICValue(string &str)
+pair<int, double> Util::calculateMIC2strings(string &A, string &B)
 {
-    vector<int> frequencyOfChars(26);
+    vector<int> freqA = frequencyOf26Chars(A);
+    vector<int> freqB = frequencyOf26Chars(B);
+
+    vector<double> shiftMIC(26);
+    pair<int, double> bestSuitable(-1, 0);
+
+    for (int i = 0; i < 26; i++)
+    {
+        double t = 0;
+        for (int j = 0; j < 26; j++)
+        {
+            t += freqA[j] * freqB[j];
+        }
+        t = t / (double)(A.size() * B.size());
+        shiftMIC[i] = t;
+
+        if (bestSuitable.second < t)
+        {
+            bestSuitable.first = i;
+            bestSuitable.second = t;
+        }
+
+        // Now shift the array B by 1 unit
+        int temp = freqB[25];
+        for (int i = 25; i > 0; i--)
+        {
+            freqB[i] = freqB[i - 1];
+        }
+        freqB[0] = temp;
+    }
+
+    return bestSuitable;
+}
+
+vector<int> Util::frequencyOf26Chars(string &str)
+{
+    vector<int> freq(26);
     int size = str.size();
     for (int i = 0; i < size; i++)
     {
-        frequencyOfChars[(int)str[i] - (int)'A']++;
+        freq[(int)str[i] - (int)'A']++;
     }
+    return freq;
+}
 
+double Util::calculateICValue(string &str)
+{
+    vector<int> frequencyOfChars = frequencyOf26Chars(str);
+    int size = str.size();
     int ICValue = 0;
     for (int i = 0; i < 26; i++)
     {
@@ -41,9 +86,9 @@ double Util::calculateICValue(string &str)
     return ((double)ICValue / (double)(size * (size - 1)));
 }
 
-double Util::getICValue(string cipherText, int keySize)
+vector<string> Util::generateSubstring(string cipherText, int keySize)
 {
-    // Breaking the string into keysizes
+    // For keysize k, it generates the substring consider ith and (i+k)index characters
     vector<string> substrings(keySize);
     int size = cipherText.size();
     for (int i = 0; i < keySize; i++)
@@ -53,9 +98,13 @@ double Util::getICValue(string cipherText, int keySize)
             substrings[i] += cipherText[j];
         }
     }
-    // for (string k : substrings)
-    //     cout << k << " ";
-    // cout << endl;
+    return substrings;
+}
+
+double Util::getICValue(string cipherText, int keySize)
+{
+    // Breaking the string into keysizes
+    vector<string> substrings = generateSubstring(cipherText, keySize);
 
     double ICValue = 0;
     for (int i = 0; i < keySize; i++)
