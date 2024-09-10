@@ -24,9 +24,21 @@ public:
     // Return the key for the decryption
     vector<string> mutualIndexOfCoincidence(int keySize);
 
-    // string findFinalKeyword(unordered_set<string> keysList);
+    string decryptVigenereCipher(string cipherText, int keySize, string testKey);
 };
 
+string CryptAnalysis::decryptVigenereCipher(string cipherText, int keySize, string testKey){
+    string plainText = "";
+    for (int j = 0; j < cipherText.size();)
+    {
+        for (int k = 0; k < keySize; k++, j++)
+        {
+            char plain = ((cipherText[j] - 'A') - (testKey[k] - 'A') + 26) % 26 + 'A';
+            plainText += plain;
+        }
+    }
+    return plainText;
+}
 vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
 {
     Util util;
@@ -82,6 +94,11 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
     }
     string finalKey;
     vector<string> keysList;
+    vector<int> frequency;
+    int maxFrequency= -1;int index=-1;
+    string originalPlainText;
+    unordered_set<string> dictionaryWords = {"the","The","be","to","of","and","a","A","in","that","have", "I","It","it","for","not","on","with","he","He","as","you","do","at","this","This","but","his","by","from"};
+
     for (int i = 0; i < 26; i++)
     {
         int testKey[keySize];
@@ -94,39 +111,43 @@ vector<string> CryptAnalysis::mutualIndexOfCoincidence(int keySize)
         {
             finalKey += char(testKey[j] + 65);
         }
-        // double finalKeyIC = util.getICValue(cipherText,5);
-        // cout << finalKey << " "<<finalKeyIC << endl;
         keysList.push_back(finalKey);
     }
 
     // For the ith string, we find the MIC with other susbtring
     cout << "-----------------------------------------------" << "\n";
-    cout << "Possible KEY with Its Decrypted Text: " << "\n"
+    cout << "Possible KEYS with Its Decrypted Text: " << "\n"
          << "\n";
     for (int i = 0; i < 26; i++)
     {
         string testKey = keysList[i];
         cout << testKey << " ";
-        string plainText = "";
-        for (int j = 0; j < cipherText.size();)
-        {
-            for (int k = 0; k < keySize; k++, j++)
-            {
-                char plain = ((cipherText[j] - 'A') - (testKey[k] - 'A') + 26) % 26 + 'A';
-                plainText += plain;
+        string plainText = decryptVigenereCipher(cipherText,keySize,testKey);
+        string a = util.addSpecialCharacters(originalCipherText, plainText);
+        stringstream ss(a);
+        int freq=0;
+        string word;
+        vector<string> words;
+        while (ss >> word){
+            words.push_back(word);
+        }
+        
+        for(int i=0;i<words.size();i++){
+            if(dictionaryWords.find(words[i]) != dictionaryWords.end()){
+                freq++;
             }
         }
-        cout << endl;
-        // vector<int> frequencyOfChars = util.frequencyOf26Chars(plainText);
-        // double icValue; int n= cipherText.size();
-        // for(int i=0;i<26;i++){
-        //     icValue += (frequencyOfChars[i])*(frequencyOfChars[i]-1);
-        // }
-        // icValue = icValue/(n*(n-1));
-        cout << " " << util.addSpecialCharacters(originalCipherText, plainText) << " " << endl;
-        cout << endl;
+        if(freq > maxFrequency){
+            maxFrequency = freq;
+            index=i;
+            originalPlainText = a;
+        }
+        frequency.push_back(freq);
+        cout << frequency[i] << endl;
     }
-
+    cout << endl;
+    cout << "Key: "<< keysList[index] << endl;
+    cout << "Plaintext: " << originalPlainText <<endl;
     return keysList;
 }
 
@@ -192,3 +213,11 @@ unordered_set<int> CryptAnalysis::kasaskiMethod()
 
     return plength;
 }
+
+
+// vector<int> frequencyOfChars = util.frequencyOf26Chars(plainText);
+        // double icValue; int n= cipherText.size();
+        // for(int i=0;i<26;i++){
+        //     icValue += (frequencyOfChars[i])*(frequencyOfChars[i]-1);
+        // }
+        // icValue = icValue/(n*(n-1));
